@@ -20,7 +20,7 @@ router.get('/search', withAuth, async (req, res) => {
     try {
         let notes = await Note
             .find({ author: req.user._id })
-            .find({ $text: { $search:query } });
+            .find({ $text: { $search: query } });
         res.send(notes)
     } catch (error) {
         res.status(500).json({ error: "Internal server error" });
