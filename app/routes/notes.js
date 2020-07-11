@@ -15,4 +15,27 @@ router.post('/', withAuth, async (req, res) => {
     }
 })
 
+router.get('/:id', withAuth, async (req, res) => {
+    const { id } = req.params;
+    try {
+        let note = await Note.findById(id);
+        if(isOwner(req.user, note)){
+            res.status(200).json(note);
+        } else {
+            res.status(403).json({ error: "Permission denied" });
+        }
+
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+})
+
+const isOwner = (user, note) => {
+    if (JSON.stringify(user._id) == JSON.stringify(note.author._id)){
+        return true;
+    }
+
+    return false;
+}
+
 module.exports = router;
