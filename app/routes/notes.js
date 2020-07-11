@@ -15,6 +15,18 @@ router.post('/', withAuth, async (req, res) => {
     }
 })
 
+router.get('/search', withAuth, async (req, res) => {
+    const { query } = req.query;
+    try {
+        let notes = await Note
+            .find({ author: req.user._id })
+            .find({ $text: { $search:query } });
+        res.send(notes)
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+})
+
 router.get('/:id', withAuth, async (req, res) => {
     const { id } = req.params;
     try {
@@ -65,8 +77,8 @@ router.delete('/:id', withAuth, async (req, res) => {
     try {
         let note = await Note.findById(id);
         if(isOwner(req.user, note)){
-            let note = await Note.findByIdAndDelete(id);
-            res.json(note);
+            await Note.findByIdAndDelete(id);
+            res.json({ message: "Ok" });
         } else {
             res.status(403).json({ error: "Permission denied" });
         }
