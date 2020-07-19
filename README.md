@@ -1,5 +1,7 @@
 # Project notes - Backend
 
+![Heroku](http://heroku-badge.herokuapp.com/?app=dnotes-api)
+
 ## How to run
 - Using mongo with docker container: **docker-compose up -d**
 - Install libraries **npm install or yarn**
